@@ -196,7 +196,7 @@ class ServiceProvider(db.Model):
     picture = db.Column(db.String(100), nullable=True)
     about = db.Column(db.Text)
     password = db.Column(db.String(200), nullable=False)
-
+    FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
 
     def is_service_provider(self):
         return self.role == "service_provider"
@@ -256,7 +256,7 @@ class Client(db.Model):
     
     reviews = db.relationship("Review", backref="client", lazy=True)
     appointments = db.relationship("Appointment", backref="client", lazy=True)
-    
+    FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
     
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -418,18 +418,18 @@ class FavoriteServiceProvider(db.Model):
     __tablename__ = 'Favorite_service_provider'
 
     id = db.Column(db.Integer, primary_key=True)
-    service_provider_id = db.Column(
-        db.Integer, db.ForeignKey('service_provider.id'), nullable=False
+    service_providers_id = db.Column(
+        db.Integer, db.ForeignKey('service_providers.id'), nullable=False
     )
     
-    client_id = db.Column(
-        db.Integer, db.ForeignKey('client.id'), nullable=False
+    clients_id = db.Column(
+        db.Integer, db.ForeignKey('clients.id'), nullable=False
     )
 
     
     def to_dict(self):
         return {
             "id": self.id,
-            "service_provider_id": self.service_provider_id,
-            "client_id": self.Client_id,
+            "service_provider_id": self.service_providers_id,
+            "clients_id": self.Clients_id,
         }
