@@ -100,7 +100,7 @@ class HairStyle(db.Model):
             "name": self.name,
             "picture": self.picture,
             "category": self.category,
-            "attachments": [a.to_dict() for a in self.attachments]
+            "attachments": [a.to_dict() for a in self.attachments],
         }
 
 # ============================
@@ -175,7 +175,7 @@ class Service(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description
+            "description": self.description,
         }
 
 # ============================
@@ -359,4 +359,77 @@ class ServiceAlias(db.Model):
             "id": self.id,
             "alias_name": self.alias_name,
             "service_provider_services_id": self.service_provider_services_id
+        }
+
+
+
+# ============================
+#        ADMIN
+# ============================
+
+class Admin(db.Model):
+    __tablename__ = 'Admin'
+
+    id = db.Column(db.Integer, primary_key=True)
+    password = db.Column(db.String(100), nullable=False)
+    contact = db.Column(db.String(100), nullable=False)
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
+
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "password": self.password,
+            "contact":self.contact,
+            }
+
+
+
+
+# ============================
+#     CATEGORIES
+# ============================
+
+class Categories(db.Model):
+    __tablename__ = 'Categories'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description
+        }
+
+
+# ============================
+#   FAVORITE SERVICE PROVIDER
+# ============================
+
+class FavoriteServiceProvider(db.Model):
+    __tablename__ = 'Favorite_service_provider'
+
+    id = db.Column(db.Integer, primary_key=True)
+    service_provider_id = db.Column(
+        db.Integer, db.ForeignKey('service_provider.id'), nullable=False
+    )
+    
+    client_id = db.Column(
+        db.Integer, db.ForeignKey('client.id'), nullable=False
+    )
+
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "service_provider_id": self.service_provider_id,
+            "client_id": self.Client_id,
         }

@@ -84,10 +84,3 @@ def get_clients():
     clients = Client.query.all()
     return jsonify([client.to_dict() for client in clients]), 200
 
-@routes_bp('/clients/<int:id>', methods=['GET'])
-@jwt_required()
-def get_clients(id):
-    student = Client.query.get(id)
-    if not student:
-        return jsonify({"error": "Clientt not found"}), 404
-    return jsonify(clients.to_dict()), 200
