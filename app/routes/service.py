@@ -26,3 +26,25 @@ def get_service():
     all_services = Service.query.all()
     return jsonify([service.to_dict() for service in all_services])
 
+#this route updates a service
+@service_bp.route('/api/service/<int:id>', methods=['PUT'])
+def update_service(id):
+    data = request.get_json()
+    service = Service.query.get(id)
+    if not service:
+        return jsonify({"error": "service not found"}), 404
+    service.name = data.get('name', service.name)
+    service.description = data.get('description', service.description)
+    db.session.commit()
+    return jsonify(service.to_dict()), 200 
+
+
+#this route deletes a service based on id
+@service_bp.route('/api/service/<int:id>', methods=['DELETE'])
+def delete_service(id):
+    service = Service.query.get(id)
+    if not service:
+        return jsonify({"error": "service not found"}), 404
+    db.session.delete(service)
+    db.session.commit()
+    return jsonify({"message": "service deleted successfully"}), 200
