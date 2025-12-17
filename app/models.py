@@ -294,8 +294,14 @@ class ServiceProvider(db.Model):
     picture = db.Column(db.String(100), nullable=True)
     about = db.Column(db.Text)
     password = db.Column(db.String(200), nullable=False)
+    favorite_associations = db.relationship(
+    "FavoriteServiceProvider",
+    backref="service_provider",
+    cascade="all, delete-orphan"
+)
+
     
-    FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
+    # FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
 
     def is_service_provider(self):
         return self.role == "service_provider"
@@ -368,9 +374,15 @@ class Client(db.Model):
 
     reviews = db.relationship("Review", backref="client", lazy=True)
     appointments = db.relationship("Appointment", backref="client", lazy=True)
+    favorite_associations = db.relationship(
+    "FavoriteServiceProvider",
+    backref="client",
+    cascade="all, delete-orphan"
+)
 
 
-    FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
+
+    # FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
     
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -591,21 +603,21 @@ class Categories(db.Model):
 # ============================
 
 class FavoriteServiceProvider(db.Model):
-    __tablename__ = 'Favorite_service_provider'
+    __tablename__ = 'favorite_service_provider'
 
     id = db.Column(db.Integer, primary_key=True)
-    service_providers_id = db.Column(
+
+    service_provider_id = db.Column(
         db.Integer, db.ForeignKey('service_providers.id'), nullable=False
     )
 
-    clients_id = db.Column(
+    client_id = db.Column(
         db.Integer, db.ForeignKey('clients.id'), nullable=False
     )
-
 
     def to_dict(self):
         return {
             "id": self.id,
-            "service_provider_id": self.service_providers_id,
-            "clients_id": self.Clients_id,
+            "service_provider_id": self.service_provider_id,
+            "client_id": self.client_id,
         }
