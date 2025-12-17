@@ -615,6 +615,8 @@ class FavoriteServiceProvider(db.Model):
         db.Integer, db.ForeignKey('clients.id'), nullable=False
     )
 
+
+
     def to_dict(self):
         return {
             "id": self.id,
