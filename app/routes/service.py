@@ -5,10 +5,11 @@ from flask_migrate import Migrate
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity, create_refresh_token
 
 
-service_bp = Blueprint('service_bp', __name__)
+service_bp = Blueprint('service_bp', __name__ )
+
 
 #this route creates a new service
-@service_bp.route   ('api/service',  methods=['POST'])
+@service_bp.route ('/api/service',  methods=['POST'])
 def add_service():
     try:
         data = request.get_json()
@@ -21,7 +22,7 @@ def add_service():
 
 
 #this route gets all services
-@service_bp.route  ('api/service', methods=['GET'])
+@service_bp.route  ('/api/service', methods=['GET'])
 def get_service():
     all_services = Service.query.all()
     return jsonify([service.to_dict() for service in all_services])
@@ -36,7 +37,7 @@ def update_service(id):
     service.name = data.get('name', service.name)
     service.description = data.get('description', service.description)
     db.session.commit()
-    return jsonify(service.to_dict()), 200 
+    return jsonify(service.to_dict()), 200
 
 
 #this route deletes a service based on id

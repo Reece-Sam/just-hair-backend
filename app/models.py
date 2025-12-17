@@ -294,6 +294,7 @@ class ServiceProvider(db.Model):
     picture = db.Column(db.String(100), nullable=True)
     about = db.Column(db.Text)
     password = db.Column(db.String(200), nullable=False)
+    
     FavoriteServiceProvider = db.relationship("favorites", back_populates="FavoriteServiceProvider_associations")
 
     def is_service_provider(self):

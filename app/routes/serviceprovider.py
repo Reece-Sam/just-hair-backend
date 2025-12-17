@@ -47,7 +47,7 @@ def update_serviceprovider(id):
 
 
 
-#this sixth route deletes a service provider based on id
+#this route deletes a service provider based on id
 @serviceprovider_bp.route('/api/serviceprovider/<int:id>', methods=['DELETE'])
 def delete_serviceprovider(id):
     serviceprovider = ServiceProvider.query.get(id)
